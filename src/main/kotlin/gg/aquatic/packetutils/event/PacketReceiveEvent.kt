@@ -1,5 +1,6 @@
 package gg.aquatic.packetutils.event
 
+import gg.aquatic.eventutils.CancellableAquaticEvent
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ServerGamePacketListener
 import org.bukkit.entity.Player

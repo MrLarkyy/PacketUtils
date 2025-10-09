@@ -12,10 +12,12 @@ version = "1.0.0"
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://repo.nekroplex.com/releases")
 }
 
 dependencies {
     paperweight.paperDevBundle("1.21.10-R0.1-SNAPSHOT")
+    implementation("gg.aquatic.eventutils:EventUtils:1.0.0")
 }
 
 kotlin {

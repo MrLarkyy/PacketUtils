@@ -1,9 +1,11 @@
 package gg.aquatic.packetutils
 
+import gg.aquatic.eventutils.EventUtils
+import gg.aquatic.eventutils.call
+import gg.aquatic.eventutils.event
 import gg.aquatic.packetutils.event.PacketReceiveEvent
 import gg.aquatic.packetutils.event.PacketSendEvent
 import gg.aquatic.packetutils.util.ProtectedPacket
-import gg.aquatic.packetutils.event.call
 import io.netty.channel.ChannelDuplexHandler
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPromise
@@ -12,10 +14,8 @@ import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ServerGamePacketListener
 import net.minecraft.server.network.ServerCommonPacketListenerImpl
-import org.bukkit.Bukkit
 import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
@@ -27,18 +27,18 @@ class PacketListener(
     companion object {
 
         fun initialize(plugin: JavaPlugin) {
-            Bukkit.getPluginManager().registerEvents(
-                object : org.bukkit.event.Listener {
+            if (EventUtils.plugin == null) {
+                EventUtils.initialize(plugin)
+            }
 
-                    @EventHandler(ignoreCancelled = true)
-                    fun PlayerJoinEvent.onJoin() = register(player)
-
-                    @EventHandler(ignoreCancelled = true)
-                    fun PlayerQuitEvent.onQuit() = unregister(player)
-
-                }, plugin
-            )
+            event<PlayerJoinEvent> {
+                register(it.player)
+            }
+            event<PlayerQuitEvent> {
+                unregister(it.player)
+            }
         }
+
 
         private val playerConnectionField =
             ReflectionUtils.getField("connection", ServerCommonPacketListenerImpl::class.java)
